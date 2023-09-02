@@ -6,7 +6,7 @@ const pgPassword = process.env.PG_PASS
 const client = new Client({
     user: 'benlynch',
     host: 'localhost',
-    database: 'megaten_p3',
+    database: 'prime_app',
     password: {pgPassword},
     port: 5432
 });
@@ -16,31 +16,31 @@ const jsonData = JSON.parse(fs.readFileSync('megaten_data.json', 'utf8'));
 async function insertData() {
     await client.connect();
 
-    for (const demonName in jsonData) {
-        const demonData = jsonData[demonName];
+    for (const personaName in jsonData) {
+        const personaData = jsonData[personaName];
 
         const query = `
-            INSERT INTO demons (name, cardlvl, heart, inherits, lvl, race, resists, skills, stats)
+            INSERT INTO personas (name, cardlvl, heart, inherits, lvl, race, resists, skills, stats)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         `;
 
         const values = [
-            demonName,
-            demonData.cardlvl,
-            demonData.heart || null,
-            demonData.inherits,
-            demonData.lvl,
-            demonData.race,
-            demonData.resists,
-            JSON.stringify(demonData.skills),
-            JSON.stringify(demonData.stats)
+            personaName,
+            personaData.cardlvl,
+            personaData.heart || null,
+            personaData.inherits,
+            personaData.lvl,
+            personaData.race,
+            personaData.resists,
+            JSON.stringify(personaData.skills),
+            JSON.stringify(personaData.stats)
         ];
 
         try {
             await client.query(query, values);
-            console.log(`Inserted data for ${demonName}`);
+            console.log(`Inserted data for ${personaName}`);
         } catch (error) {
-            console.error(`Error inserting data for ${demonName}: ${error.message}`);
+            console.error(`Error inserting data for ${personaName}: ${error.message}`);
         }
     }
 
